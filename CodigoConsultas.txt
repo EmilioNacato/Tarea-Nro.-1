@@ -1,0 +1,122 @@
+Querys a la eleccion
+--------------------
+
+1. Realizar una consulta donde se muestre los aspirantes que rindieron el examen que sean de genero Masculino y esten en estado activo. La consulta debe mostrar:
+- Cedula del aspirante
+- Nombres y apellidos del aspirante
+- Estado del examen del aspirante 
+- Genero del aspirante
+
+select asp.CCAs, asp.NmAs, asp.LstNmAs, exa.StsExa, asp.GnAs from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+where asp.GnAs like 'M' and exa.StsExa like 'Activo';
+
+
+2. Realizar una consulta donde se muestre las notas mayores o iguales a 800 puntos de los aspirantes. La consulta debe mostrar:
+- Cedula del aspirante
+- Nombres y apellidos del aspirante
+- Nota del examen del aspirante
+
+select asp.CCAs, asp.NmAs, asp.LstNmAs, exa.ScrExa from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+where exa.ScrExa>=800;
+
+
+Querys group by
+---------------
+
+3. Realizar una consulta donde se muestre el numero de permisos que existen por los roles de las bases de datos. La consulta debe mostrar:
+- Nombre del tipo de rol 
+- Numero de permisos por rol
+
+select rol.TypRol, count(per.TypPer) as NbrPer from Establece as est
+inner join Permisos as per on per.IdPer = est.IdPer
+inner join Rol as rol on rol.IdRol = est.IdRol
+group by rol.IdRol;
+
+4. Realizar una consulta donde se muestre los estados de gratuidad, junto con el número de usuarios encargados y su promedio de notas obtenidas en los examenes que cada aspirante a rendido. La consulta debe mostrar:
+- Nombre del estado de gratuidad
+- Número de usuarios encargados
+- Promedio de notas
+
+select asp.StsGratuiAs, count(us.IdUs) as NbrUs, avg(exa.IdExa) as ScrExa from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+inner join Usuario as us on us.IdUs = asp.IdUs
+group by asp.StsGratuiAs;
+
+5. Realizar una consulta donde se muestre las modalidades de las carreras y junto a ello mostrar el numero de sedes que manejan dicha modalidad. La consulta debe mostrar:
+- Nombre de las modalidades de las carreras
+- Número de sedes
+
+select car.AcadCrgCar, count(sed.IdSe) as NbrSe from Consta as con
+inner join Sedes as sed on sed.IdSe = con.IdSe
+inner join Carreras as car on car.IdCar = con.IdCar
+group by car.AcadCrgCar;
+
+Querys having
+-------------
+
+6. De la consulta anterior mostrar solamente los que sean mayor o igual a 1270 numero de sedes que manejan dicha modalidad. La consulta debe mostrar:
+- Nombre de las modalidades de las carreras
+- Número de sedes
+
+select car.AcadCrgCar,count(sed.IdSe) as NbrSe from Consta as con
+inner join Sedes as sed on sed.IdSe = con.IdSe
+inner join Carreras as car on car.IdCar = con.IdCar
+group by car.AcadCrgCar
+having NbrSe>=1270;
+
+7. Realizar una consulta donde se muestren la cédulas de los aspirantes que tienen obtuvieron una nota en el rango de 950 y 999. La consulta debe mostrar:
+- Cédula del aspirante
+- Nota del aspirante
+
+select asp.CCAs, exa.ScrExa from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+group by asp.CCAs
+having exa.ScrExa between 950 and 999;
+
+8. Realizar una consulta donde se resalte el nombre de los estudiantes con puntaje perfecto en su examen. La consulta debe mostrar:
+- Cédula del aspirante
+- Nombre del aspirante 
+- Nota del aspirante
+
+select asp.CCAs, asp.NmAs, exa.ScrExa from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+group by asp.CCAs
+having exa.ScrExa=1000;
+
+Querys con funciones de agregacion
+----------------------------------
+
+9. Realizar una consulta donde muestre por el tipo de estado una suma de todos las notas de obtenidas por cada estado del aspirante, además se debe incluir el promedio de notas. La consulta debe mostrar:
+- Nombre del tipo de estado
+- Suma de las notas
+- Promedio de notas
+
+select asp.StsAs, sum(exa.IdExa) as ScrSumExa, avg(exa.IdExa) as ScrExa from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+inner join Usuario as us on us.IdUs = asp.IdUs
+group by asp.StsAs;
+
+10. Realizar una consulta donde se muestre el conteo de los aspirantes por su genero. La consulta debe mostrar:
+- Nombre del genero
+- Número de aspirantes 
+
+select asp.GnAs, count(asp.CCAs) as NbrAs from Pertenece as pe
+inner join Aspirantes as asp on asp.CCAs = pe.CCAs
+inner join Examen as exa on exa.IdExa = pe.IdExa
+group by asp.GnAs;
+
+
+
+
+
+
+
+
